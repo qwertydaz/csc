@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>How-To Guide</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="StyleSheet.css">
+</head>
+
+<body>
+<h1>
+    How to create a more sophisticated AI that more accurately replicates human behaviour.
+</h1>
+
+<p>
+    This is a statement with a lot of meaning behind it. Before we can attempt that we must first break it down:
+</p>
+
+<ol>
+    <li>
+        Create an AI.
+    </li>
+    <li>
+        Create a metric to compare the AI to human behaviour.
+    </li>
+    <li>
+        Generate data with that metric on both the AI and the human.
+    </li>
+</ol>
+
+<p>
+    For the purposes for this tutorial, I will be using the Unity engine which requires knowledge of C#. So, what game will we create? I like to think that the best way to get actionable and “better” results is to make the possible outcomes as small as possible (as close to Boolean as we can). A great game genre, for our purposes, is turn-based. Generally, the player can make one or more actions per turn. The game has several turns. Then the game ends depending on if the player has reached a goal, a time limit/turn limit, etc. This is a very quantifiable format and will make it easier for our AI to learn.
+</p>
+
+<p>
+    Before reading on, know that I am making assumptions about your ability as to not oversimplify my explanation. To be able to get the most out of this guide, I recommend that you follow under the following:
+</p>
+
+<ul>
+    <li>
+        Understand object orientated programming.
+    </li>
+    <li>
+        Able to read and understand Java/C# code.
+    </li>
+    <li>
+        Understand the rules of Uno.
+    </li>
+</ul>
+
+<h2>
+    Creating a card game to test
+</h2>
+
+<p>
+    You can create any card game you want but I will show you how to create an abstract base to build any card game off. For this guide, I will recreate the card game Uno, but I will begin by defining a few abstract classes that can be applied to any card game. To make an abstract base, you need to break down how card games work fundamentally. Card games are essentially an environment containing several arrays/lists of cards. The goal or win condition could be emptying one or more of those arrays/lists or maybe to have a specific ordered sequence in one or more of those arrays/lists. In the case of Uno, the goal is to empty the list of cards assigned to you. In Uno, this list would be referred to as your “hand.” Once you place all your cards onto the discard pile and have no more cards in your hand, then you win.
+</p>
+
+<p>
+    As you can see, all card games are about sequences of cards, how they interact with each other and what are the current states of those sequences.
+</p>
+
+<p>
+    In a programmatic view, you could see how this could be translated to an OOP program. For my example, I will define each card as its own object as well as a sequence of card objects as an object itself.
+</p>
+
+<p>
+    The following images are an example of how you could implement this in C#:
+</p>
+
+<h3>
+    Card Object (fig. 1):
+</h3>
+
+<img src="images/fig. 1.png" alt="Code for Card Class">
+
+<h3>
+    Sequence of Card Objects Object (fig. 2):
+</h3>
+
+<img src="images/fig. 2.png" alt="Code for CardSequence Class">
+
+<p>
+    Notice that they are both defined as abstract. We will use these classes to create our own special classes that better relate to Uno. These are our base classes that we can build most of our system off.
+</p>
+
+<p>
+    We will also need to define a person object. This will allow us to create person subclasses that we can use to define what a person is in relation to players in each card game.
+</p>
+
+<h3>
+    Person Object (fig. 3):
+</h3>
+
+<img src="images/fig. 3.png" alt="Code for Person Class">
+
+<p>
+    To recap, we have defined Card, CardSequence and Person objects. This is essentially all we need to build a card game off as, generally, this is all a card game consists of.
+</p>
+
+<h2>
+    Creating Uno on top of our abstract classes
+</h2>
+
+<p>
+    From now on, this is more focused on specific classes that Uno requires. If you desire to create your own game, I would advise that you see how I use the three class above in my Uno implementation. Once you have a grasp of how to expand those three classes in a card game, you can hopefully go ahead and make any card game you want.
+</p>
+
+<p>
+    First, I need to create the pool of all available cards in Uno. The way I did this was to create a Deck object which extends CardSequence. This contains a list of all available card names and card types and combines them into a big list of all available Card objects in the game. Just so you can better understand my code, here is an image that showcases every card in Uno. There is a total of 108 separate cards with multiple of them being duplicates.
+</p>
+
+<h3>
+    Total cards in Uno (fig. 4) (credit- Wikipedia):
+</h3>
+
+<img src="images/fig. 4.png" alt="Grid of all Uno cards">
+
+<h3>
+    Deck Object (fig. 5):
+</h3>
+
+<img src="images/fig. 5.png" alt="Code for Deck Class">
+
+<p>
+    There is a lot to unpack in this class so I will cover some of the important features.
+</p>
+
+<h3>
+    (fig. 6)
+</h3>
+
+<img src="images/fig. 6.png" alt="Code for GenStartDeck Method">
+
+<p>
+    GenStartDeck() is a method which creates an individual Card object for each of the cards seen in fig. 4. It can create two separate instances of Card called ColourCard and WildCard. These define the differences between a regular card and a wild card. The main difference being that a wild card has no specified colour. I have added a Shuffle() method to the CardSequence class. I have utilised the fisher-yates shuffling algorithm as C#’s own random number generator is widely criticised for not being random enough.
+</p>
+
+<h3>
+    Shuffle method (fig. 7):
+</h3>
+
+<img src="images/fig. 7.png" alt="Code for Shuffle Method">
+
+<p>
+    Here is the code for the two Card object implementations used in fig. 5 and fig. 6:
+</p>
+
+<h3>
+    Coloured Card Object (fig. 8):
+</h3>
+
+<img src="images/fig. 8.png" alt="Code for ColourCard Class">
+
+<p>
+    The card ability is something I will leave up to you. For now, all you need to know is how to create these objects and what they are used for.
+</p>
+
+<h3>
+    Wildcard Object (fig. 9):
+</h3>
+
+<img src="images/fig. 9.png" alt="Code for WildCard Class">
+
+<p>
+    Both classes call to the Card constructor. As seen in fig. 1, I have a way of handling null values for name, type, etc. and have set default values for them. It is important to set default values when creating these abstract base classes as you cannot assume what exactly will be passed through the parameters.
+</p>
+
+<p>
+    For Uno, I will need to change how the Person and CardSequence works. To do this, I will make several concrete classes which extends those two classes respectively. Uno requires that each Person is assigned their own CardSequence. I will implement this by creating a Hand object and a Player object. The Player object extends the Person object and is comprised of a name and a Hand object. The Hand object extends Deck and is comprised of 7 Card objects.
+</p>
+
+<p>
+    Below is how this looks in C#:
+</p>
+
+<h3>
+    Player Object (fig. 10):
+</h3>
+
+<img src="images/fig. 10.png" alt="Code for Player Class">
+
+<h3>
+    Hand Object (fig. 11):
+</h3>
+
+<img src="images/fig. 11.png" alt="Code for Hand Class">
+</body>
+
+</html>
